@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#07111f">
+
+  <meta
+    name="description"
+    content="Pocket Planner — an offline-first personal planner with tasks, reminders, recurring items, cloud sync and daily briefings."
+  >
+
+  <title>Pocket Planner</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.webmanifest">
+
+  <!-- App stylesheet -->
+  <link rel="stylesheet" href="./styles.css">
+
+  <!-- Icons -->
+  <link rel="icon" href="./icons/icon-192.svg" type="image/svg+xml">
+</head>
+
+<body>
+
+  <!-- =========================================================
+       APP SHELL
+  ========================================================== -->
+
+  <div class="app-shell">
+
+    <!-- =======================================================
+         SIDEBAR
+    ======================================================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+      <div class="brand">
+
+        <div class="brand-mark">
+          ✓
+        </div>
+
+        <div>
+          <p class="eyebrow">PERSONAL COMMAND CENTRE</p>
+          <h1>Pocket Planner</h1>
+        </div>
+
+      </div>
+
+      <nav class="nav-list" aria-label="Planner views">
+
+        <button
+          class="nav-item active"
+          type="button"
+          data-view="today"
+        >
+          <span>Today</span>
+          <span class="nav-count" id="todayCount">0</span>
+        </button>
+
+        <button
+          class="nav-item"
+          type="button"
+          data-view="upcoming"
+        >
+          <span>Upcoming</span>
+          <span class="nav-count" id="upcomingCount">0</span>
+        </button>
+
+        <button
+          class="nav-item"
+          type="button"
+          data-view="important"
+        >
+          <span>Important</span>
+          <span class="nav-count" id="importantCount">0</span>
+        </button>
+
+        <button
+          class="nav-item"
+          type="button"
+          data-view="all"
+        >
+          <span>All tasks</span>
+          <span class="nav-count" id="allCount">0</span>
+        </button>
+
+        <button
+          class="nav-item"
+          type="button"
+          data-view="completed"
+        >
+          <span>Completed</span>
+          <span class="nav-count" id="completedCount">0</span>
+        </button>
+
+      </nav>
+
+
+      <!-- =====================================================
+           TAG FILTERS
+      ====================================================== -->
+
+      <section class="sidebar-section">
+
+        <div class="section-label">
+          Tags
+        </div>
+
+        <div id="tagFilters" class="tag-filters"></div>
+
+      </section>
+
+
+      <!-- =====================================================
+           ACCOUNT
+      ====================================================== -->
+
+      <section class="account-card">
+
+        <div>
+
+          <p class="eyebrow">
+            CLOUD SYNC
+          </p>
+
+          <strong id="accountLabel">
+            Local mode
+          </strong>
+
+          <p class="muted" id="syncStatus">
+            Tasks are stored on this device.
+          </p>
+
+        </div>
+
+        <button
+          class="ghost-btn"
+          id="accountButton"
+          type="button"
+        >
+          Sign in
+        </button>
+
+      </section>
+
+    </aside>
+
+
+    <!-- =======================================================
+         MAIN CONTENT
+    ======================================================== -->
+
+    <main class="main-content">
+
+      <!-- =====================================================
+           TOP BAR
+      ====================================================== -->
+
+      <header class="topbar">
+
+        <button
+          class="icon-btn menu-btn"
+          id="menuButton"
+          type="button"
+          aria-label="Open menu"
+        >
+          ☰
+        </button>
+
+        <div class="topbar-title">
+
+          <p class="eyebrow">
+            YOUR DAY
+          </p>
+
+          <h2 id="viewTitle">
+            Today
+          </h2>
+
+        </div>
+
+
+        <div class="topbar-actions">
+
+          <button
+            class="ghost-btn"
+            id="briefButton"
+            type="button"
+          >
+            Morning brief
+          </button>
+
+          <button
+            class="ghost-btn"
+            id="syncNowButton"
+            type="button"
+          >
+            Sync
+          </button>
+
+          <button
+            class="ghost-btn"
+            id="installButton"
+            type="button"
+            hidden
+          >
+            Install
+          </button>
+
+          <button
+            class="primary-btn"
+            id="newTaskButton"
+            type="button"
+          >
+            + New task
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <!-- =====================================================
+           HERO / OVERVIEW
+      ====================================================== -->
+
+      <section class="dashboard-hero">
+
+        <div>
+
+          <p class="eyebrow">
+            FOCUS
+          </p>
+
+          <h2 id="heroHeading">
+            What's on today?
+          </h2>
+
+          <p class="muted" id="heroSubheading">
+            Keep the important stuff visible and everything else out of your head.
+          </p>
+
+        </div>
+
+
+        <div class="hero-stats">
+
+          <div class="stat">
+
+            <span class="stat-number" id="dueTodayStat">
+              0
+            </span>
+
+            <span class="stat-label">
+              Due today
+            </span>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span class="stat-number" id="overdueStat">
+              0
+            </span>
+
+            <span class="stat-label">
+              Overdue
+            </span>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span class="stat-number" id="highPriorityStat">
+              0
+            </span>
+
+            <span class="stat-label">
+              Important
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           QUICK ADD
+      ====================================================== -->
+
+      <section class="quick-add-card">
+
+        <div class="quick-add-copy">
+
+          <p class="eyebrow">
+            QUICK ADD
+          </p>
+
+          <h3>
+            Get it out of your head.
+          </h3>
+
+        </div>
+
+
+        <form id="quickAddForm" class="quick-add-form">
+
+          <input
+            id="quickAddInput"
+            type="text"
+            maxlength="160"
+            autocomplete="off"
+            placeholder="e.g. Take bins out tomorrow at 8pm #home"
+            aria-label="Quick add task"
+          >
+
+          <button
+            class="primary-btn"
+            type="submit"
+          >
+            Add
+          </button>
+
+        </form>
+
+      </section>
+
+
+      <!-- =====================================================
+           FILTER BAR
+      ====================================================== -->
+
+      <section class="filter-bar">
+
+        <div class="search-box">
+
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search tasks..."
+            autocomplete="off"
+          >
+
+        </div>
+
+
+        <select
+          id="priorityFilter"
+          aria-label="Filter by priority"
+        >
+
+          <option value="all">
+            All priorities
+          </option>
+
+          <option value="critical">
+            Critical
+          </option>
+
+          <option value="high">
+            High
+          </option>
+
+          <option value="normal">
+            Normal
+          </option>
+
+          <option value="low">
+            Low
+          </option>
+
+        </select>
+
+      </section>
+
+
+      <!-- =====================================================
+           TASK LIST
+      ====================================================== -->
+
+      <section class="task-section">
+
+        <div class="task-section-head">
+
+          <div>
+
+            <p class="eyebrow">
+              TASKS
+            </p>
+
+            <h3 id="taskSectionTitle">
+              Today
+            </h3>
+
+          </div>
+
+          <span
+            class="muted"
+            id="visibleTaskCount"
+          >
+            0 tasks
+          </span>
+
+        </div>
+
+
+        <div
+          id="taskList"
+          class="task-list"
+          aria-live="polite"
+        ></div>
+
+
+        <div
+          id="emptyState"
+          class="empty-state"
+          hidden
+        >
+
+          <div class="empty-icon">
+            ✓
+          </div>
+
+          <h3>
+            Nothing here.
+          </h3>
+
+          <p>
+            Your brain can stop keeping tabs on it.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           NOTIFICATION STATUS
+      ====================================================== -->
+
+      <section class="notification-card">
+
+        <div>
+
+          <p class="eyebrow">
+            REMINDERS
+          </p>
+
+          <strong>
+            Browser notifications
+          </strong>
+
+          <p
+            class="muted"
+            id="notificationStatus"
+          >
+            Checking notification support...
+          </p>
+
+        </div>
+
+        <button
+          class="ghost-btn"
+          id="enableNotificationsButton"
+          type="button"
+        >
+          Enable notifications
+        </button>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <!-- =========================================================
+       TASK DIALOG
+  ========================================================== -->
+
+  <dialog
+    id="taskDialog"
+    class="modal"
+  >
+
+    <div class="modal-head">
+
+      <div>
+
+        <p class="eyebrow">
+          TASK
+        </p>
+
+        <h2 id="taskDialogTitle">
+          New task
+        </h2>
+
+      </div>
+
+      <button
+        class="icon-btn"
+        type="button"
+        data-close="taskDialog"
+        aria-label="Close task"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <form id="taskForm">
+
+      <input
+        id="taskId"
+        type="hidden"
+      >
+
+
+      <div class="field">
+
+        <label for="taskTitle">
+          Task
+        </label>
+
+        <input
+          id="taskTitle"
+          type="text"
+          maxlength="160"
+          required
+          autocomplete="off"
+          placeholder="What needs doing?"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="taskNotes">
+          Notes
+        </label>
+
+        <textarea
+          id="taskNotes"
+          maxlength="4000"
+          rows="5"
+          placeholder="Anything you'll need when this comes back around..."
+        ></textarea>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label for="taskDue">
+            Due
+          </label>
+
+          <input
+            id="taskDue"
+            type="datetime-local"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="taskPriority">
+            Priority
+          </label>
+
+          <select id="taskPriority">
+
+            <option value="low">
+              Low
+            </option>
+
+            <option
+              value="normal"
+              selected
+            >
+              Normal
+            </option>
+
+            <option value="high">
+              High
+            </option>
+
+            <option value="critical">
+              Critical
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label for="taskReminder">
+            Remind me
+          </label>
+
+          <select id="taskReminder">
+
+            <option value="">
+              No reminder
+            </option>
+
+            <option value="0">
+              At due time
+            </option>
+
+            <option value="5">
+              5 minutes before
+            </option>
+
+            <option value="15">
+              15 minutes before
+            </option>
+
+            <option value="30">
+              30 minutes before
+            </option>
+
+            <option value="60">
+              1 hour before
+            </option>
+
+            <option value="1440">
+              1 day before
+            </option>
+
+            <option value="10080">
+              1 week before
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="taskRepeat">
+            Repeat
+          </label>
+
+          <select id="taskRepeat">
+
+            <option value="none">
+              Doesn't repeat
+            </option>
+
+            <option value="daily">
+              Daily
+            </option>
+
+            <option value="weekdays">
+              Weekdays
+            </option>
+
+            <option value="weekly">
+              Weekly
+            </option>
+
+            <option value="monthly">
+              Monthly
+            </option>
+
+            <option value="yearly">
+              Yearly
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="taskTags">
+          Tags
+        </label>
+
+        <input
+          id="taskTags"
+          type="text"
+          maxlength="300"
+          autocomplete="off"
+          placeholder="home, work, ashenfell"
+        >
+
+        <small class="muted">
+          Separate tags with commas.
+        </small>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="taskAssignee">
+          Assign / remind someone
+        </label>
+
+        <input
+          id="taskAssignee"
+          type="text"
+          maxlength="50"
+          autocomplete="off"
+          placeholder="@username"
+        >
+
+        <small class="muted">
+          Shared task assignment requires both users to have an account.
+        </small>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          class="danger-btn"
+          id="deleteTaskButton"
+          type="button"
+          hidden
+        >
+          Delete
+        </button>
+
+        <div class="grow"></div>
+
+        <button
+          class="ghost-btn"
+          type="button"
+          data-close="taskDialog"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="primary-btn"
+          type="submit"
+        >
+          Save task
+        </button>
+
+      </div>
+
+    </form>
+
+  </dialog>
+
+
+  <!-- =========================================================
+       ACCOUNT DIALOG
+  ========================================================== -->
+
+  <dialog
+    id="accountDialog"
+    class="modal"
+  >
+
+    <div class="modal-head">
+
+      <div>
+
+        <p class="eyebrow">
+          POCKET PLANNER
+        </p>
+
+        <h2>
+          Account
+        </h2>
+
+      </div>
+
+      <button
+        class="icon-btn"
+        type="button"
+        data-close="accountDialog"
+        aria-label="Close account"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div
+      id="signedOutPanel"
+      class="auth-panel"
+    >
+
+      <p class="muted">
+        An account lets you sync tasks between devices and share tasks with other people.
+      </p>
+
+
+      <div class="field">
+
+        <label for="authUsername">
+          Username
+        </label>
+
+        <input
+          id="authUsername"
+          type="text"
+          maxlength="50"
+          autocomplete="username"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="authPassword">
+          Password
+        </label>
+
+        <input
+          id="authPassword"
+          type="password"
+          minlength="12"
+          maxlength="200"
+          autocomplete="current-password"
+        >
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          class="ghost-btn"
+          id="registerButton"
+          type="button"
+        >
+          Create account
+        </button>
+
+        <div class="grow"></div>
+
+        <button
+          class="primary-btn"
+          id="loginButton"
+          type="button"
+        >
+          Sign in
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="signedInPanel"
+      class="auth-panel"
+      hidden
+    >
+
+      <p>
+        Signed in as
+        <strong id="signedInUsername"></strong>
+      </p>
+
+      <p class="muted">
+        Tasks on this device will sync with your account.
+      </p>
+
+      <div class="modal-actions">
+
+        <div class="grow"></div>
+
+        <button
+          class="danger-btn"
+          id="logoutButton"
+          type="button"
+        >
+          Sign out
+        </button>
+
+      </div>
+
+    </div>
+
+  </dialog>
+
+
+  <!-- =========================================================
+       MORNING BRIEF DIALOG
+  ========================================================== -->
+
+  <dialog
+    id="briefDialog"
+    class="modal"
+  >
+
+    <div class="modal-head">
+
+      <div>
+
+        <p class="eyebrow">
+          DAILY INTELLIGENCE
+        </p>
+
+        <h2>
+          Morning Brief
+        </h2>
+
+      </div>
+
+      <button
+        class="icon-btn"
+        id="closeBrief"
+        type="button"
+        aria-label="Close Morning Brief"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <form id="briefForm">
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label for="briefTime">
+            Brief time
+          </label>
+
+          <input
+            id="briefTime"
+            type="time"
+            value="07:00"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="briefTimezone">
+            Timezone
+          </label>
+
+          <input
+            id="briefTimezone"
+            type="text"
+            value="Europe/London"
+            maxlength="100"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label for="outTime">
+            Leave home
+          </label>
+
+          <input
+            id="outTime"
+            type="time"
+            value="08:00"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="backTime">
+            Leave work
+          </label>
+
+          <input
+            id="backTime"
+            type="time"
+            value="17:00"
+          >
+
+        </div>
+
+      </div>
+
+
+      <section class="brief-location-section">
+
+        <p class="eyebrow">
+          HOME WEATHER POINT
+        </p>
+
+        <div class="form-grid">
+
+          <div class="field">
+
+            <label for="homeLat">
+              Latitude
+            </label>
+
+            <input
+              id="homeLat"
+              type="number"
+              step="0.0001"
+              min="-90"
+              max="90"
+              inputmode="decimal"
+              placeholder="51.5074"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="homeLon">
+              Longitude
+            </label>
+
+            <input
+              id="homeLon"
+              type="number"
+              step="0.0001"
+              min="-180"
+              max="180"
+              inputmode="decimal"
+              placeholder="-0.1278"
+            >
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <section class="brief-location-section">
+
+        <p class="eyebrow">
+          WORK WEATHER POINT
+        </p>
+
+        <div class="form-grid">
+
+          <div class="field">
+
+            <label for="workLat">
+              Latitude
+            </label>
+
+            <input
+              id="workLat"
+              type="number"
+              step="0.0001"
+              min="-90"
+              max="90"
+              inputmode="decimal"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="workLon">
+              Longitude
+            </label>
+
+            <input
+              id="workLon"
+              type="number"
+              step="0.0001"
+              min="-180"
+              max="180"
+              inputmode="decimal"
+            >
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <div class="field">
+
+        <label class="checkbox-label">
+
+          <input
+            id="briefEnabled"
+            type="checkbox"
+            checked
+            style="width:auto"
+          >
+
+          Enable weekday Morning Brief
+
+        </label>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          class="ghost-btn"
+          id="previewBrief"
+          type="button"
+        >
+          Preview today
+        </button>
+
+        <div class="grow"></div>
+
+        <button
+          class="primary-btn"
+          type="submit"
+        >
+          Save brief
+        </button>
+
+      </div>
+
+    </form>
+
+
+    <div
+      id="briefOutput"
+      class="brief-preview"
+      aria-live="polite"
+    ></div>
+
+  </dialog>
+
+
+  <!-- =========================================================
+       TASK TEMPLATE
+  ========================================================== -->
+
+  <template id="taskTemplate">
+
+    <article class="task-card">
+
+      <button
+        class="task-check"
+        type="button"
+        aria-label="Complete task"
+      >
+        ✓
+      </button>
+
+
+      <button
+        class="task-main"
+        type="button"
+      >
+
+        <div class="task-title-row">
+
+          <strong class="task-title"></strong>
+
+          <span class="priority-pill"></span>
+
+        </div>
+
+
+        <p class="task-notes"></p>
+
+
+        <div class="task-meta">
+
+          <span class="task-due"></span>
+
+          <span class="task-repeat"></span>
+
+          <span class="task-assignee"></span>
+
+        </div>
+
+
+        <div class="task-tags"></div>
+
+      </button>
+
+    </article>
+
+  </template>
+
+
+  <!-- =========================================================
+       TOAST
+  ========================================================== -->
+
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+
+  <!-- =========================================================
+       JAVASCRIPT
+  ========================================================== -->
+
+  <script src="./db.js"></script>
+  <script src="./app.js"></script>
+
+</body>
+</html>
