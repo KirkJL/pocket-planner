@@ -1,0 +1,78 @@
+{
+  "id": "./",
+  "name": "Pocket Planner",
+  "short_name": "Planner",
+  "description": "An offline-first personal planner for tasks, reminders, recurring items, shared tasks and daily briefings.",
+  "lang": "en-GB",
+  "dir": "ltr",
+
+  "start_url": "./",
+  "scope": "./",
+
+  "display": "standalone",
+  "orientation": "any",
+
+  "background_color": "#050b14",
+  "theme_color": "#07111f",
+
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
+
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "New task",
+      "short_name": "New task",
+      "description": "Create a new task",
+      "url": "./?action=new-task",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Today",
+      "short_name": "Today",
+      "description": "View today's tasks",
+      "url": "./?view=today",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
