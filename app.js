@@ -27,7 +27,7 @@
  *   "https://pocket-planner-api.YOUR-SUBDOMAIN.workers.dev";
  */
 
-const API_BASE = "https://REPLACE-ME.workers.dev";
+const API_BASE = "https://dark-credit-5334.kirkjlemon.workers.dev/";
 
 
 /* ============================================================
