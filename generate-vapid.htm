@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Generate VAPID keys</title>
+<pre id="out">Generating…</pre>
+<script>
+(async () => {
+  const pair = await crypto.subtle.generateKey({name:"ECDSA",namedCurve:"P-256"},true,["sign","verify"]);
+  const pub = await crypto.subtle.exportKey("raw",pair.publicKey);
+  const jwk = await crypto.subtle.exportKey("jwk",pair.privateKey);
+  const b64 = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+  document.querySelector("#out").textContent =
+`VAPID_PUBLIC_KEY=${b64(pub)}
+
+VAPID_PRIVATE_JWK=${JSON.stringify(jwk)}
+
+VAPID_SUBJECT=mailto:you@example.com
+
+Keep the PRIVATE JWK secret. Do not commit it to GitHub.`;
+})();
+</script>
